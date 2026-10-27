@@ -1,0 +1,185 @@
+2026-09-12 10:37:56,104 transreid INFO: Namespace(config_file='configs/UAD.yml', opts=['DATASETS.DATASET_DIR', 'WHU-MARS', 'TEST.IMS_PER_BATCH', '512', 'TEST.WEIGHT', 'logs/UAD_1000_DDP/transformer_120.pth', 'OUTPUT_DIR', 'logs/UAD_1000_DDP'])
+2026-09-12 10:37:56,105 transreid INFO: Loaded configuration file configs/UAD.yml
+2026-09-12 10:37:56,105 transreid INFO: 
+MODEL:
+  PRETRAIN_CHOICE: 'imagenet'
+  PRETRAIN_PATH: 'jx_vit_base_p16_224-80ecf9dd.pth'
+  METRIC_LOSS_TYPE: 'wrt'
+  IF_LABELSMOOTH: 'off'
+  IF_WITH_CENTER: 'no'
+  NAME: 'transformer'
+  NO_MARGIN: True
+  TRANSFORMER_TYPE: 'vit_base_in'
+  STRIDE_SIZE: [16, 16]
+  PCA_LOSS_WEIGHT: 0.01
+  # New-center weight; equivalent to alpha=0.8 on the old prototype in Eq. (7).
+  GPD_MOMENTUM: 0.2
+
+INPUT:
+  SIZE_TRAIN: [256, 128]
+  SIZE_TEST: [256, 128]
+  PROB: 0.5 # random horizontal flip
+  RE_PROB: 0.5 # random erasing
+  PADDING: 10
+  PIXEL_MEAN: [0.5, 0.5, 0.5]
+  PIXEL_STD: [0.5, 0.5, 0.5]
+
+DATASETS:
+  NAMES: ('WHU-MARS')
+  ROOT_DIR: ('/project/code/data')
+  MODALITIES: ['RGB', 'IR', 'Thermal']
+
+DATALOADER:
+  SAMPLER: 'PKM'
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+
+SOLVER:
+  OPTIMIZER_NAME: 'SGD'
+  MAX_EPOCHS: 120
+  BASE_LR: 0.008
+  IMS_PER_BATCH: 64
+  SEED: 1234
+  WARMUP_METHOD: 'linear'
+  WARMUP_EPOCHS: 5
+  CHECKPOINT_PERIOD: 120
+  LOG_PERIOD: 50
+  EVAL_PERIOD: 10
+  WEIGHT_DECAY:  1e-4
+  WEIGHT_DECAY_BIAS: 1e-4
+  BIAS_LR_FACTOR: 2
+  LOSS_TYPE: "base+pca+gpd"
+
+TEST:
+  IMS_PER_BATCH: 512
+  RE_RANKING: False
+  NECK_FEAT: 'before'
+  FEAT_NORM: 'yes'
+
+OUTPUT_DIR: './logs/UAD_1000'
+
+2026-09-12 10:37:56,105 transreid INFO: Running with config:
+DATALOADER:
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+  SAMPLER: PKM
+DATASETS:
+  DATASET_DIR: WHU-MARS
+  FILTER_GD: False
+  MODALITIES: ('RGB', 'IR', 'Thermal')
+  NAMES: WHU-MARS
+  ROOT_DIR: /project/code/data
+INPUT:
+  PADDING: 10
+  PIXEL_MEAN: [0.5, 0.5, 0.5]
+  PIXEL_STD: [0.5, 0.5, 0.5]
+  PROB: 0.5
+  RE_PROB: 0.5
+  SIZE_TEST: [256, 128]
+  SIZE_TRAIN: [256, 128]
+MODEL:
+  ATT_DROP_RATE: 0.0
+  COS_LAYER: False
+  DEVICE: cuda
+  DEVICE_ID: 0
+  DEVIDE_LENGTH: 4
+  DIST_TRAIN: False
+  DROP_OUT: 0.0
+  DROP_PATH: 0.1
+  GPD_MOMENTUM: 0.2
+  ID_LOSS_TYPE: softmax
+  ID_LOSS_WEIGHT: 1.0
+  IF_LABELSMOOTH: off
+  IF_WITH_CENTER: no
+  JPM: False
+  LAST_STRIDE: 1
+  METRIC_LOSS_TYPE: wrt
+  NAME: transformer
+  NECK: bnneck
+  NO_MARGIN: True
+  PCA_LOSS_WEIGHT: 0.01
+  PRETRAIN_CHOICE: imagenet
+  PRETRAIN_PATH: jx_vit_base_p16_224-80ecf9dd.pth
+  RE_ARRANGE: True
+  SHIFT_NUM: 5
+  SHUFFLE_GROUP: 2
+  SIE_CAMERA: False
+  SIE_COE: 3.0
+  SIE_VIEW: False
+  STRIDE_SIZE: [16, 16]
+  TRANSFORMER_TYPE: vit_base_in
+  TRIPLET_LOSS_WEIGHT: 1.0
+OUTPUT_DIR: logs/UAD_1000_DDP
+SOLVER:
+  BASE_LR: 0.008
+  BIAS_LR_FACTOR: 2
+  CENTER_LOSS_WEIGHT: 0.0005
+  CENTER_LR: 0.5
+  CHECKPOINT_PERIOD: 120
+  COSINE_MARGIN: 0.5
+  COSINE_SCALE: 30
+  EVAL_PERIOD: 10
+  GAMMA: 0.1
+  IMS_PER_BATCH: 64
+  LARGE_FC_LR: False
+  LOG_PERIOD: 50
+  LOSS_TYPE: base+pca+gpd
+  MARGIN: 0.3
+  MAX_EPOCHS: 120
+  MOMENTUM: 0.9
+  OPTIMIZER_NAME: SGD
+  SEED: 1234
+  STEPS: (40, 70)
+  WARMUP_EPOCHS: 5
+  WARMUP_FACTOR: 0.01
+  WARMUP_METHOD: linear
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: 0.0001
+TEST:
+  DIST_MAT: dist_mat.npy
+  EVAL: False
+  FEAT_NORM: yes
+  IMS_PER_BATCH: 512
+  NECK_FEAT: before
+  RE_RANKING: False
+  TOP_K_EVAL: 0
+  WEIGHT: logs/UAD_1000_DDP/transformer_120.pth
+2026-09-12 10:38:25,091 transreid.test INFO: Enter inferencing
+2026-09-12 10:41:44,059 transreid.test INFO: => Split mode 1: query 2135, total query 2135
+2026-09-12 10:41:44,091 transreid.test INFO: => Split mode 2: query 2135, total query 4270
+2026-09-12 10:41:44,122 transreid.test INFO: => Split mode 3: query 2135, total query 6405
+2026-09-12 10:41:44,165 transreid.test INFO: The test feature is normalized
+2026-09-12 10:41:44,227 transreid.test INFO: => Computing DistMat in q-chunks (chunk=4000)
+2026-09-12 10:43:03,387 transreid.test INFO: Starting modality-pair specific evaluation. Query mods: [1, 2, 3], Gallery mods: [1, 2, 3]
+2026-09-12 10:43:11,185 transreid.test INFO:   Pair (Q:1, G:1) -> Rank-1: 42.48%, mAP: 26.53%, mINP: 5.06%
+2026-09-12 10:43:18,925 transreid.test INFO:   Pair (Q:1, G:2) -> Rank-1: 27.17%, mAP: 16.07%, mINP: 2.23%
+2026-09-12 10:43:26,595 transreid.test INFO:   Pair (Q:1, G:3) -> Rank-1: 7.49%, mAP: 5.61%, mINP: 1.09%
+2026-09-12 10:43:34,272 transreid.test INFO:   Pair (Q:2, G:1) -> Rank-1: 24.54%, mAP: 15.66%, mINP: 2.82%
+2026-09-12 10:43:41,764 transreid.test INFO:   Pair (Q:2, G:2) -> Rank-1: 27.96%, mAP: 16.83%, mINP: 2.40%
+2026-09-12 10:43:49,428 transreid.test INFO:   Pair (Q:2, G:3) -> Rank-1: 6.37%, mAP: 5.25%, mINP: 1.04%
+2026-09-12 10:43:57,030 transreid.test INFO:   Pair (Q:3, G:1) -> Rank-1: 7.40%, mAP: 5.85%, mINP: 1.30%
+2026-09-12 10:44:04,608 transreid.test INFO:   Pair (Q:3, G:2) -> Rank-1: 7.92%, mAP: 5.25%, mINP: 1.00%
+2026-09-12 10:44:12,174 transreid.test INFO:   Pair (Q:3, G:3) -> Rank-1: 20.75%, mAP: 13.52%, mINP: 2.28%
+2026-09-12 10:44:12,174 transreid.test INFO: VI-ReID results (Table 5 protocol):
+2026-09-12 10:44:12,174 transreid.test INFO:   Setting   Rank-1     mAP    mINP
+2026-09-12 10:44:12,175 transreid.test INFO:   NIR->RGB    24.54%  15.66%   2.82%
+2026-09-12 10:44:12,175 transreid.test INFO:   TIR->RGB     7.40%   5.85%   1.30%
+2026-09-12 10:44:12,175 transreid.test INFO: Modality-pair results (Table 6 protocol):
+2026-09-12 10:44:12,175 transreid.test INFO:   Query Gallery  Rank-1     mAP    mINP
+2026-09-12 10:44:12,175 transreid.test INFO:     RGB     RGB  42.48%  26.53%   5.06%
+2026-09-12 10:44:12,175 transreid.test INFO:     RGB     NIR  27.17%  16.07%   2.23%
+2026-09-12 10:44:12,175 transreid.test INFO:     RGB     TIR   7.49%   5.61%   1.09%
+2026-09-12 10:44:12,175 transreid.test INFO:     NIR     RGB  24.54%  15.66%   2.82%
+2026-09-12 10:44:12,175 transreid.test INFO:     NIR     NIR  27.96%  16.83%   2.40%
+2026-09-12 10:44:12,175 transreid.test INFO:     NIR     TIR   6.37%   5.25%   1.04%
+2026-09-12 10:44:12,175 transreid.test INFO:     TIR     RGB   7.40%   5.85%   1.30%
+2026-09-12 10:44:12,175 transreid.test INFO:     TIR     NIR   7.92%   5.25%   1.00%
+2026-09-12 10:44:12,175 transreid.test INFO:     TIR     TIR  20.75%  13.52%   2.28%
+2026-09-12 10:44:12,176 transreid.test INFO: AG-ReID results (Table 4 protocol; all modalities):
+2026-09-12 10:44:24,159 transreid.test INFO:   A->G -> mAP: 11.46%, Rank-1: 31.63%, Rank-10: 58.52%
+2026-09-12 10:44:36,007 transreid.test INFO:   G->A -> mAP: 13.30%, Rank-1: 30.12%, Rank-10: 54.50%
+2026-09-12 10:44:36,047 transreid.test INFO: Validation Results 
+2026-09-12 10:44:36,048 transreid.test INFO: mAP: 11.02%
+2026-09-12 10:44:36,048 transreid.test INFO: CMC curve, Rank-1  :29.71%
+2026-09-12 10:44:36,048 transreid.test INFO: CMC curve, Rank-5  :46.32%
+2026-09-12 10:44:36,048 transreid.test INFO: CMC curve, Rank-10 :54.55%
